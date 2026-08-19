@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0d1117;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Glassmorphic Navbar */
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+.logo span { color: #ff6b00; }
+
+.nav nav a {
+  color: #ccc;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: 0.3s;
+}
+
+.nav nav a:hover { color: #ff6b00; }
+
+/* 3D Scroll Reveal Classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px) rotateX(-15deg) scale(0.95);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0) rotateX(0) scale(1);
+}
+
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  background: radial-gradient(circle at center, #1f293d 0%, #0d1117 70%);
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+}
+
+.gold { color: #ff6b00; }
+
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 15px;
+  margin-top: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.goldbg {
+  background: linear-gradient(45deg, #ff6b00, #ff9e00);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+}
+
+.goldbg:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(255, 107, 0, 0.5);
+}
+
+/* 3D Product Cards */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+  perspective: 1000px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.card:hover {
+  transform: translateY(-10px) rotateY(10deg) rotateX(5deg);
+  box-shadow: -10px 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+/* Section Common */
+.section {
+  padding: 100px 8%;
+}
+
+.contact-links a {
+  display: inline-block;
+  margin-right: 15px;
+  margin-top: 15px;
+  color: #ff6b00;
+  text-decoration: none;
+  font-weight: 600;
+}
