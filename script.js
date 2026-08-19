@@ -1,51 +1,61 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Config Dynamic Data Injection
-  document.getElementById("heroTitle").innerText = CONFIG.heroTitle;
-  document.getElementById("heroHighlight").innerText = CONFIG.heroHighlight;
-  document.getElementById("heroText").innerText = CONFIG.heroText;
-  document.getElementById("aboutTitle").innerText = CONFIG.aboutTitle;
-  document.getElementById("aboutText1").innerText = CONFIG.aboutText1;
-  document.getElementById("aboutText2").innerText = CONFIG.aboutText2;
+// THREE.JS 3D Particle Universe Background
+const canvas = document.getElementById('bg-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
 
-  // Contact Links
-  document.getElementById("callLink").href = `tel:${CONFIG.phone}`;
-  document.getElementById("waLink").href = `https://wa.me/${CONFIG.whatsapp.replace(/[^0-9]/g, '')}`;
-  document.getElementById("fbLink").href = CONFIG.facebook;
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-  // Load Products Grid
-  const grid = document.getElementById("productsGrid");
-  CONFIG.products.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card reveal";
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.title}">
-      <div class="card-content">
-        <h3>${p.title}</h3>
-        <p>${p.desc}</p>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
+// Particle Geometry
+const geometry = new THREE.BufferGeometry();
+const count = 1500;
+const positions = new Float32Array(count * 3);
 
-  // Add 3D Reveal Class to Sections
-  document.querySelectorAll("section, article, .mini div").forEach(el => {
-    el.classList.add("reveal");
-  });
+for(let i = 0; i < count * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 10;
+}
 
-  // 3D Scroll Reveal Logic
-  const revealOnScroll = () => {
-    const reveals = document.querySelectorAll(".reveal");
-    reveals.forEach(el => {
-      const windowHeight = window.innerHeight;
-      const elementTop = el.getBoundingClientRect().top;
-      const elementVisible = 100;
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-      if (elementTop < windowHeight - elementVisible) {
-        el.classList.add("active");
-      }
-    });
-  };
+// Cyan Neon Particle Material
+const material = new THREE.PointsMaterial({
+    size: 0.015,
+    color: 0x00f0ff
+});
 
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll(); // Initial Check
+const particles = new THREE.Points(geometry, material);
+scene.add(particles);
+
+camera.position.z = 3;
+
+// Mouse Interaction Effect
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX / window.innerWidth - 0.5;
+    mouseY = e.clientY / window.innerHeight - 0.5;
+});
+
+// Render Loop
+function animate() {
+    requestAnimationFrame(animate);
+    
+    particles.rotation.y += 0.001;
+    particles.rotation.x += 0.001;
+
+    particles.rotation.y += mouseX * 0.05;
+    particles.rotation.x += mouseY * 0.05;
+
+    renderer.render(scene, camera);
+}
+
+animate();
+
+// Resize Handler
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 });
