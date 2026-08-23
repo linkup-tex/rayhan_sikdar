@@ -1,33 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAYHAN SIKDAR | AI Content Creator & Islamic Video Specialist</title>
+    <title>RAYHAN SIKDAR | Ultra-Modern 3D Interactive Portfolio</title>
     
-    <!-- Fonts -->
+    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Three.js Library for 3D Background Effect -->
+    <!-- AOS Scroll Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Vanilla Tilt.js for 3D Cards -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #040508;
-            --bg-card: rgba(13, 16, 25, 0.75);
-            --gold-primary: #f59e0b;
+            --bg-dark: #030712;
+            --card-bg: rgba(17, 24, 39, 0.65);
+            --gold: #f59e0b;
             --gold-glow: #fbbf24;
-            --gold-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-            --cyan-accent: #06b6d4;
-            --text-light: #f8fafc;
-            --text-dim: #94a3b8;
-            --border-glow: rgba(245, 158, 11, 0.3);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --cyan: #06b6d4;
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+            --border: rgba(245, 158, 11, 0.3);
         }
 
         * {
@@ -39,14 +42,26 @@
 
         body {
             background-color: var(--bg-dark);
-            color: var(--text-light);
+            color: var(--text-main);
             font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+        }
+
+        /* Interactive Custom Mouse Pointer Glow */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            transition: transform 0.1s ease-out;
         }
 
         /* 3D WebGL Canvas Background */
-        #webgl-canvas {
+        #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -56,603 +71,438 @@
             pointer-events: none;
         }
 
-        /* Top Bismillah Banner */
-        .bismillah-bar {
-            background: linear-gradient(90deg, rgba(4,5,8,0.95), rgba(245,158,11,0.15), rgba(4,5,8,0.95));
-            border-bottom: 1px solid var(--border-glow);
+        /* 1. TOP MOST BISMILLAH HEADER */
+        .bismillah-header {
+            background: rgba(3, 7, 18, 0.95);
+            border-bottom: 1px solid var(--border);
             text-align: center;
-            padding: 8px 15px;
-            position: relative;
-            z-index: 1001;
+            padding: 15px 10px;
             backdrop-filter: blur(10px);
         }
 
         .bismillah-text {
             font-family: 'Amiri', serif;
-            font-size: 1.5rem;
-            color: #fef08a;
-            text-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+            font-size: 1.8rem;
+            color: var(--gold-glow);
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.7);
             letter-spacing: 1px;
         }
 
-        .bismillah-sub {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* Navigation */
+        /* Navigation Bar */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 8%;
-            background: rgba(4, 5, 8, 0.85);
-            backdrop-filter: blur(16px);
+            padding: 1.2rem 8%;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(15px);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .logo {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 1.5rem;
             font-weight: 800;
-            letter-spacing: 2px;
             color: #fff;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: var(--gold-gradient);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
+        .logo span { color: var(--gold); }
+
+        .order-nav-btn {
+            background: linear-gradient(135deg, var(--gold), #d97706);
             color: #000;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-        }
-
-        .logo span {
-            color: var(--gold-primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-dim);
+            padding: 10px 22px;
+            border-radius: 25px;
             text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
         }
 
-        .nav-links a:hover {
-            color: var(--gold-primary);
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        .order-nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
         }
 
-        .nav-btn {
-            background: var(--gold-gradient);
-            color: #000 !important;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-weight: 700 !important;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-        }
-
-        /* Hero Section */
+        /* Hero Intro */
         header.hero {
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 8%;
+            padding: 80px 8% 50px;
             text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 950px;
-            z-index: 2;
-        }
-
-        .quran-quote-box {
-            font-family: 'Amiri', serif;
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px solid var(--border-glow);
-            padding: 12px 25px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);
-        }
-
-        .quran-arabic {
-            font-size: 1.4rem;
-            color: var(--gold-glow);
-        }
-
-        .quran-translation {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin-top: 4px;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .hero-badge {
-            display: inline-block;
-            color: var(--cyan-accent);
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--cyan);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 6px 18px;
+            border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            background: rgba(6, 182, 212, 0.1);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            letter-spacing: 2px;
+            display: inline-block;
+            margin-bottom: 20px;
         }
 
         .hero h1 {
-            font-size: 3.6rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 40%, var(--gold-primary) 100%);
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            margin-bottom: 2.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-sub);
             line-height: 1.8;
         }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1.2rem;
-            justify-content: center;
-            flex-wrap: wrap;
+        /* Work Proof Section */
+        .proof-section {
+            padding: 60px 8%;
         }
 
-        .btn {
-            padding: 16px 36px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--gold-gradient);
-            color: #000;
-            box-shadow: 0 4px 25px rgba(245, 158, 11, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 35px rgba(245, 158, 11, 0.6);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--gold-primary);
-            color: var(--gold-primary);
-            transform: translateY(-4px);
-        }
-
-        /* Services Section */
-        .services-section {
-            padding: 90px 8%;
-            background: rgba(4, 5, 8, 0.6);
-        }
-
-        .section-header {
+        .section-title {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 50px;
         }
 
-        .section-header h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .section-header h2 span {
-            color: var(--gold-primary);
-        }
-
-        .section-header p {
-            color: var(--text-dim);
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 1.05rem;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .service-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 2.5rem;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(12px);
-            position: relative;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--gold-glow);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.2);
-        }
-
-        .service-icon {
-            width: 65px;
-            height: 65px;
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.8rem;
-            color: var(--gold-primary);
-        }
-
-        .service-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .section-title h2 {
+            font-size: 2.3rem;
             color: #fff;
-            font-weight: 700;
         }
 
-        .service-card p {
-            color: var(--text-dim);
-            font-size: 0.98rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
+        .section-title h2 span { color: var(--gold); }
 
-        .service-features {
-            list-style: none;
-            border-top: 1px solid var(--glass-border);
-            padding-top: 1.2rem;
-        }
-
-        .service-features li {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            margin-bottom: 0.6rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .service-features li i {
-            color: var(--cyan-accent);
-            font-size: 0.8rem;
-        }
-
-        /* Portfolio Showcase */
-        .work-section {
-            padding: 90px 8%;
-        }
-
-        .work-grid {
+        .proof-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 30px;
+            perspective: 1000px;
         }
 
-        .work-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+        .proof-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
         }
 
-        .work-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--gold-primary);
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+        .proof-card:hover {
+            border-color: var(--gold-glow);
         }
 
-        .work-tag {
+        .card-badge {
             font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--cyan-accent);
-            letter-spacing: 2px;
+            color: var(--gold);
+            font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 0.6rem;
+            margin-bottom: 12px;
+            display: inline-block;
         }
 
-        .work-card h3 {
-            font-size: 1.35rem;
+        .proof-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
             color: #fff;
-            margin-bottom: 0.8rem;
+            transform: translateZ(20px);
         }
 
-        .work-card p {
-            color: var(--text-dim);
+        .proof-card p {
             font-size: 0.95rem;
-            margin-bottom: 1.5rem;
+            color: var(--text-sub);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            transform: translateZ(15px);
         }
 
-        .watch-link {
-            display: inline-flex;
+        .fb-btn {
+            display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--gold-primary);
+            justify-content: center;
+            gap: 10px;
+            background: #1877f2;
+            color: #fff;
+            padding: 12px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.95rem;
-            background: rgba(245, 158, 11, 0.1);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--border-glow);
-            transition: all 0.3s ease;
-            width: 100%;
-            justify-content: center;
+            transition: 0.3s;
+            transform: translateZ(25px);
         }
 
-        .watch-link:hover {
-            background: var(--gold-primary);
-            color: #000;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        .fb-btn:hover {
+            background: #1461c9;
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.6);
         }
 
-        /* Direct Order / Web3Forms Section */
+        /* WEB3 DIRECT EMAIL ORDER SECTION AT BOTTOM */
         .order-section {
-            padding: 90px 8%;
-            background: rgba(4, 5, 8, 0.8);
+            padding: 70px 8% 100px;
         }
 
-        .order-box {
-            background: linear-gradient(145deg, rgba(13, 16, 25, 0.95) 0%, rgba(4, 5, 8, 0.98) 100%);
-            border: 1px solid var(--border-glow);
+        .order-container {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid var(--border);
             border-radius: 28px;
-            padding: 3.5rem 2.5rem;
-            max-width: 850px;
+            padding: 45px;
+            max-width: 800px;
             margin: 0 auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(245, 158, 11, 0.1);
-        }
-
-        .order-box h2 {
-            font-size: 2.5rem;
-            margin-bottom: 0.8rem;
-            text-align: center;
-        }
-
-        .order-box p {
-            color: var(--text-dim);
-            margin-bottom: 2.5rem;
-            text-align: center;
-            font-size: 1.05rem;
-        }
-
-        .order-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
+            margin-bottom: 22px;
         }
 
         .form-group label {
-            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
             font-weight: 600;
-            color: #e2e8f0;
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
+            width: 100%;
+            padding: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: 12px;
-            padding: 14px 18px;
             color: #fff;
-            font-family: inherit;
-            font-size: 0.98rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: 0.3s;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--gold-primary);
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.08);
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
         }
 
-        select.form-control {
-            background-color: #0d1019;
-            cursor: pointer;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
-
         .submit-btn {
-            grid-column: 1 / -1;
-            margin-top: 1rem;
             width: 100%;
-            justify-content: center;
             padding: 18px;
-            font-size: 1.1rem;
-        }
-
-        /* Direct Contacts */
-        .direct-contacts {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--glass-border);
-            flex-wrap: wrap;
-        }
-
-        .contact-chip {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 14px;
+            color: #000;
+            font-weight: 800;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: 0.3s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px 22px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            color: #cbd5e1;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
         }
 
-        .contact-chip:hover {
-            border-color: var(--gold-primary);
-            color: var(--gold-primary);
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.5);
         }
 
         footer {
             text-align: center;
-            padding: 2.5rem;
-            border-top: 1px solid var(--glass-border);
-            color: var(--text-dim);
+            padding: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-sub);
             font-size: 0.9rem;
-            background: #020305;
         }
 
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .nav-links { display: none; }
-            .order-form { grid-template-columns: 1fr; }
-            .order-box { padding: 2rem 1.2rem; }
+        @media(max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .bismillah-text { font-size: 1.4rem; }
+            .order-container { padding: 30px 20px; }
+            .cursor-glow { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 3D WebGL Canvas Background -->
-    <canvas id="webgl-canvas"></canvas>
+    <!-- Interactive Mouse Glow -->
+    <div class="cursor-glow" id="cursor-glow"></div>
 
-    <!-- Top Islamic Bismillah Bar -->
-    <div class="bismillah-bar">
+    <!-- 3D Canvas Background -->
+    <div id="canvas-container"></div>
+
+    <!-- 1. TOP BISMILLAH -->
+    <div class="bismillah-header" data-aos="fade-down">
         <div class="bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-        <div class="bismillah-sub">In the name of Allah, Most Gracious, Most Merciful</div>
     </div>
 
-    <!-- Navigation Header -->
-    <nav>
-        <div class="logo">
-            <div class="logo-icon">R</div>
-            RAYHAN <span>SIKDAR</span>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#work">Portfolio</a></li>
-            <li><a href="#order" class="nav-btn">Order Now</a></li>
-        </ul>
+    <nav data-aos="fade-down" data-aos-delay="100">
+        <div class="logo">RAYHAN <span>SIKDAR</span></div>
+        <a href="#order-form" class="order-nav-btn"><i class="fa-solid fa-paper-plane"></i> সরাসরি অর্ডার করুন</a>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="hero" id="about">
-        <div class="hero-content">
-            <div class="quran-quote-box">
-                <div class="quran-arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
-                <div class="quran-translation">"And say: My Lord, increase me in knowledge." (Quran 20:114)</div>
-            </div>
-            <br>
-            <span class="hero-badge"><i class="fa-solid fa-moon"></i> ISLAM | AI | CREATION</span>
-            <h1>AI Content Creator & Islamic Video Specialist</h1>
-            
-            <p class="hero-subtitle">
-                Creating high-impact AI promotional ad videos, premium product commercial edits, luxury watch showcases, and soul-touching Islamic content with modern 3D graphics and cinematic AI technology.
-            </p>
-
-            <div class="cta-buttons">
-                <a href="#order" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Place Direct Order</a>
-                <a href="#work" class="btn btn-secondary"><i class="fa-solid fa-play"></i> Watch Portfolio</a>
-            </div>
-        </div>
+    <header class="hero">
+        <span class="hero-badge" data-aos="zoom-in" data-aos-delay="200">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> AI CONTENT & MEDIA SPECIALIST
+        </span>
+        <h1 data-aos="fade-up" data-aos-delay="300">
+            AI Ads, Product Commercial & Islamic Video Creator
+        </h1>
+        <p data-aos="fade-up" data-aos-delay="400">
+            আমি কাস্টম AI ভিডিও বিজ্ঞাপন, টেক ও গ্যাজেটের কমার্শিয়াল প্রমোশন এবং ইসলামিক ভিডিও কন্টেন্ট তৈরি করে থাকি। নিচে আমার লাইভ কাজের প্রুফসমূহ দেওয়া রয়েছে।
+        </p>
     </header>
 
-    <!-- Detailed Services Section -->
-    <section class="services-section" id="services">
-        <div class="section-header">
-            <h2>SPECIALIZED <span>SERVICES</span></h2>
-            <p>High-end AI content creation designed to scale business sales and produce visually stunning Islamic media.</p>
+    <!-- 2. WORK PROOFS WITH 3D TILT & SCROLL ANIMATIONS -->
+    <section class="proof-section">
+        <div class="section-title" data-aos="fade-up">
+            <h2>WORK PROOFS & <span>PORTFOLIO</span></h2>
+            <p>নিচে কার্ডগুলোতে ক্লিক করে সরাসরি আমার প্রজেক্টগুলোর ভিডিও প্রুফ দেখুন:</p>
         </div>
 
-        <div class="services-grid">
-            
-            <!-- Service 1 -->
-            <div class="service-card">
-                <div class="service-icon"><i class="fa-solid fa-rectangle-ad"></i></div>
-                <h3>AI Ads & Brand Promotion</h3>
-                <p>
-                    Full-service AI video commercial production for business brands, clothing lines, leather goods, and e-commerce stores. Engineered for high Facebook & Instagram conversion.
-                </p>
-                <ul class="service-features">
-                    <li><i class="fa-solid fa-check"></i> High-converting Ad Scripting & Voiceover</li>
-                    <li><i class="fa-solid fa-check"></i> Ultra-realistic AI Visual Assets</li>
-                    <li><i class="fa-solid fa-check"></i> Optimized for Facebook Reels & TikTok Ads</li>
-                </ul>
+        <div class="proof-grid">
+            <div class="proof-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-aos="fade-right" data-aos-delay="100">
+                <span class="card-badge"><i class="fa-solid fa-rectangle-ad"></i> PROOF 01</span>
+                <h3>AI Business Commercial Ads</h3>
+                <p>পণ্যের বিক্রয় বৃদ্ধির জন্য তৈরি করা হাই-কনভার্টিং AI ভিডিও বিজ্ঞাপন।</p>
+                <a href="https://www.facebook.com/share/r/1KuebxLv5T/" target="_blank" class="fb-btn">
+                    <i class="fa-brands fa-facebook"></i> লাইভ ভিডিও প্রুফ দেখুন
+                </a>
             </div>
 
-            <!-- Service 2 -->
-            <div class="service-card">
-                <div class="service-icon"><i class="fa-solid fa-stopwatch"></i></div>
-                <h3>Product & Watch Showcase</h3>
-                <p>
-                    Cinematic 3D-style video creation for luxury watches, gadgets, leather items, and premium physical products. Dynamic lighting, camera movement, and aesthetic macro shots.
-                </p>
-                <ul class="service-features">
-                    <li><i class="fa-solid fa-check"></i> 3D Motion & Cinematic Close-ups</li>
-                    <li><i class="fa-solid fa-check"></i> Sound Design & Beat-synced Editing</li>
-                    <li><i class="fa-solid fa-check"></
+            <div class="proof-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-aos="fade-up" data-aos-delay="200">
+                <span class="card-badge"><i class="fa-solid fa-kaaba"></i> PROOF 02</span>
+                <h3>Islamic Content Creation</h3>
+                <p>দৃষ্টিনন্দন ইসলামিক ভিডিও কন্টেন্ট, মোশন টাইপোগ্রাফি এবং শর্ট রিলস।</p>
+                <a href="https://www.facebook.com/share/r/1BLmwrsS58/" target="_blank" class="fb-btn">
+                    <i class="fa-brands fa-facebook"></i> লাইভ ভিডিও প্রুফ দেখুন
+                </a>
+            </div>
+
+            <div class="proof-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-aos="fade-left" data-aos-delay="300">
+                <span class="card-badge"><i class="fa-solid fa-stopwatch"></i> PROOF 03</span>
+                <h3>Tech & Product Showcase</h3>
+                <p>প্রিমিয়াম ঘড়ি, গ্যাজেট ও ফিটনেস এক্সেসরিজের থ্রিডি কমার্শিয়াল ভিডিও।</p>
+                <a href="https://www.facebook.com/share/v/1WK8WWaXqp/" target="_blank" class="fb-btn">
+                    <i class="fa-brands fa-facebook"></i> লাইভ ভিডিও প্রুফ দেখুন
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. WEB3 DIRECT EMAIL ORDER FORM AT THE END -->
+    <section class="order-section" id="order-form">
+        <div class="order-container" data-aos="flip-up" data-aos-duration="800">
+            <h2 style="text-align: center; margin-bottom: 10px; color: #fff;">DIRECT <span>EMAIL ORDER</span> FORM</h2>
+            <p style="text-align: center; color: var(--text-sub); margin-bottom: 30px;">
+                আপনার কাজের বিবরণ লিখে সাবমিট করুন, সরাসরি আমার ইমেইলে মেসেজটি চলে আসবে।
+            </p>
+            
+            <form action="https://api.web3forms.com/submit" method="POST">
+                <!-- Web3 Access Key -->
+                <input type="hidden" name="access_key" value="fb725878-65a7-43b0-8154-ed8a86718f86">
+                
+                <div class="form-group">
+                    <label>আপনার নাম (Name)</label>
+                    <input type="text" name="Client_Name" class="form-control" placeholder="আপনার নাম লিখুন" required>
+                </div>
+
+                <div class="form-group">
+                    <label>আপনার ইমেইল (Email Address)</label>
+                    <input type="email" name="Client_Email" class="form-control" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>কাজের বিবরণ ও ডেসক্রিপশন (Project Requirements)</label>
+                    <textarea name="Project_Description" class="form-control" rows="6" placeholder="আপনি কিরকম কাজ চান, কন্টেন্টের ধরন, সময়সীমা ও বিস্তারিত লিখুন..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-paper-plane"></i> ইমেইলে সরাসরি অর্ডার পাঠান
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 RAYHAN SIKDAR | All Rights Reserved.</p>
+    </footer>
+
+    <!-- Initialize Scripts -->
+    <script>
+        // 1. Initialize AOS Scroll Animation
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // 2. Interactive Mouse Glow Tracker
+        const cursorGlow = document.getElementById('cursor-glow');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.style.left = mouseX + 'px';
+            cursorGlow.style.top = mouseY + 'px';
+        });
+
+        // 3. Three.js Interactive Particle Background with Mouse Motion
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const count = 1200;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(count * 3);
+
+        for(let i = 0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 20;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.PointsMaterial({
+            size: 0.035,
+            color: 0xf59e0b,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            points.rotation.y += 0.0015;
+            points.rotation.x += 0.0008;
+
+            camera.position.x += ((mouseX / window.innerWidth - 0.5) * 0.5 - camera.position.x) * 0.05;
+            camera.position.y += (-(mouseY / window.innerHeight - 0.5) * 0.5 - camera.position.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+                </html>
+                    
