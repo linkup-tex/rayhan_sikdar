@@ -3,129 +3,636 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayhan Sikdar | 3D AI Anime & VFX Creator</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Three.js and GSAP Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <title>RAYHAN SIKDAR | AI Content Creator & Islamic Video Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #08090c;
+            --card-bg: rgba(18, 20, 29, 0.75);
+            --accent-gold: #d4af37;
+            --accent-gold-light: #f3e5ab;
+            --accent-cyan: #00f2fe;
+            --text-main: #f0f2f5;
+            --text-muted: #94a3b8;
+            --border-color: rgba(212, 175, 55, 0.25);
+            --border-glow: rgba(212, 175, 55, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 3D Canvas Interactive Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 8%;
+            background: rgba(8, 9, 12, 0.85);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Hero Section */
+        header.hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 8% 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        .quran-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--accent-gold-light);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            background: rgba(212, 175, 55, 0.08);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #aa820a);
+            color: #000;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        /* Pillars Banner */
+        .pillars-banner {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            flex-wrap: wrap;
+        }
+
+        .pillar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #d1d5db;
+            letter-spacing: 1px;
+        }
+
+        .pillar-item span {
+            color: var(--accent-gold);
+        }
+
+        /* Services Grid Section */
+        .services-section {
+            padding: 100px 8%;
+            background: rgba(10, 11, 16, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 span {
+            color: var(--accent-gold);
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-gold);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Portfolio / Works Showcase */
+        .work-section {
+            padding: 100px 8%;
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .work-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .work-info {
+            padding: 1.8rem;
+        }
+
+        .work-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .work-card h3 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+
+        .work-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .watch-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: gap 0.2s ease;
+        }
+
+        .watch-link:hover {
+            gap: 10px;
+        }
+
+        /* Pipeline Process */
+        .process-section {
+            padding: 100px 8%;
+            background: rgba(10, 11, 16, 0.5);
+        }
+
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pipeline-step {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .step-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .pipeline-step h4 {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        /* Call To Action / Contact */
+        .contact-section {
+            padding: 100px 8%;
+            text-align: center;
+        }
+
+        .contact-box {
+            background: linear-gradient(180deg, rgba(18, 20, 29, 0.9) 0%, rgba(8, 9, 12, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .contact-box h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-box p {
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .pillars-banner {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 3D Canvas Background -->
+    <!-- 3D Interactive Canvas Background -->
     <canvas id="bg-canvas"></canvas>
 
     <!-- Navigation -->
-    <nav class="glass-nav">
-        <div class="logo">RAYHAN<span> SIKDAR</span></div>
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="#work">Showcase</a>
-            <a href="#process">VFX Process</a>
-            <a href="#contact" class="btn-neon">Hire Me</a>
-        </div>
+    <nav>
+        <div class="logo">RAYHAN <span>SIKDAR</span></div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#work">Showcase</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#contact">Hire Me</a></li>
+        </ul>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" id="hero">
+    <header class="hero" id="about">
         <div class="hero-content">
-            <p class="cyber-badge">⚡ GENERATIVELY INSPIRED</p>
-            <h1 class="glitch" data-text="AI ANIME & VFX CREATOR">AI ANIME & VFX CREATOR</h1>
-            <p class="hero-desc">Unleashing cinematic power through custom AI animation, epic battle edits, and next-gen visual storytelling.</p>
-            <div class="hero-btns">
-                <a href="#work" class="btn-primary">Explore 3D Gallery</a>
-                <a href="tel:+8809658754629" class="btn-outline">📞 Instant Call: +880 9658-754629</a>
+            <div class="quran-quote">
+                وَقُل رَّبِّ زِدْنِي عِلْمًا <br>
+                <span>"And say: My Lord, increase me in knowledge." (Quran 20:114)</span>
             </div>
-        </div>
-    </section>
-
-    <!-- 3D Showcase Section -->
-    <section class="section" id="work">
-        <h2 class="section-title">FEATURED <span>CREATIONS</span></h2>
-        <div class="cards-3d-grid">
             
-            <div class="card-3d">
-                <div class="card-inner">
-                    <div class="card-tag">AI ANIME ACTION</div>
-                    <h3>Epic Battle Power-Up</h3>
-                    <p>High-energy custom AI anime sequence with aura lighting effects.</p>
-                    <a href="https://www.facebook.com/share/r/1GHX64EUQS/" target="_blank" class="card-btn">Watch Reel →</a>
-                </div>
+            <p class="hero-badge">ISLAM | AI | CREATION</p>
+            <h1>AI Content Creator & Islamic Video Maker</h1>
+            
+            <p class="hero-subtitle">
+                Transforming creative vision into high-impact AI promotional ad videos, premium watch & product showcases, and inspiring Islamic content through modern AI animation.
+            </p>
+
+            <div class="cta-buttons">
+                <a href="#work" class="btn btn-primary">Explore Video Gallery</a>
+                <a href="tel:+8809658754629" class="btn btn-secondary">📞 Call: +880 9658-754629</a>
             </div>
 
-            <div class="card-3d">
-                <div class="card-inner">
-                    <div class="card-tag">CINEMATIC EDIT</div>
-                    <h3>AI Transformation</h3>
-                    <p>Real-to-anime seamless character metamorphosis.</p>
-                    <a href="https://www.facebook.com/share/r/17JXCadiDQ/" target="_blank" class="card-btn">Watch Reel →</a>
-                </div>
+            <div class="pillars-banner">
+                <div class="pillar-item"><span>♡</span> INSPIRING HEARTS</div>
+                <div class="pillar-item"><span>🎯</span> EMPOWERING BRANDS</div>
+                <div class="pillar-item"><span>⭐</span> CREATING IMPACT</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Specializations Section -->
+    <section class="services-section" id="services">
+        <div class="section-header">
+            <h2>MY <span>SPECIALIZATIONS</span></h2>
+            <p>Combining AI innovation with powerful visual storytelling for commercial brands and Islamic media.</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">📢</div>
+                <h3>AI Ads & Promotion</h3>
+                <p>High-converting AI visual advertisements engineered to capture attention and elevate your brand presence on social media.</p>
             </div>
 
-            <div class="card-3d">
-                <div class="card-inner">
-                    <div class="card-tag">VFX & AMV</div>
-                    <h3>Cyberpunk Scene</h3>
-                    <p>Futuristic city rendering with custom particle sound sync.</p>
-                    <a href="https://www.facebook.com/share/r/1Eq1L8SALi/" target="_blank" class="card-btn">Watch Reel →</a>
-                </div>
+            <div class="service-card">
+                <div class="service-icon">🎬</div>
+                <h3>AI Video Creation</h3>
+                <p>Next-level video production utilizing custom AI workflows, realistic motion graphics, and dynamic visual edits.</p>
             </div>
 
-            <div class="card-3d">
-                <div class="card-inner">
-                    <div class="card-tag">COMMERCIAL AI</div>
-                    <h3>Business Marketing</h3>
-                    <p>High-converting AI visual ads and dynamic brand storytelling.</p>
-                    <a href="https://www.facebook.com/share/r/1DLTUCkb3W/" target="_blank" class="card-btn">Watch Reel →</a>
-                </div>
+            <div class="service-card">
+                <div class="service-icon">⌚</div>
+                <h3>Product & Watch Ads</h3>
+                <p>Cinematic promotional videos for luxury products, watches, accessories, and e-commerce items designed for modern marketing.</p>
             </div>
 
+            <div class="service-card">
+                <div class="service-icon">🕌</div>
+                <h3>Islamic Content</h3>
+                <p>Aesthetically rich, soul-touching Islamic reminders, Quranic recitations, and educational video content generated with AI.</p>
+            </div>
         </div>
     </section>
 
-    <!-- Process Section -->
-    <section class="section glass-section" id="process">
-        <h2 class="section-title">THE <span>ANIMATION PIPELINE</span></h2>
-        <div class="pipeline">
-            <div class="step"><b>01</b> <span>Concept & Scripting</span></div>
-            <div class="step"><b>02</b> <span>AI Anime Rendering</span></div>
-            <div class="step"><b>03</b> <span>VFX & Sound Design</span></div>
-            <div class="step"><b>04</b> <span>4K Final Polish</span></div>
+    <!-- Featured Works Showcase -->
+    <section class="work-section" id="work">
+        <div class="section-header">
+            <h2>FEATURED <span>PROJECTS</span></h2>
+            <p>Explore recent commercial promotional videos and high-converting AI media edits.</p>
+        </div>
+
+        <div class="work-grid">
+            <div class="work-card">
+                <div class="work-info">
+                    <div class="work-tag">COMMERCIAL AI</div>
+                    <h3>Business Ads & Marketing</h3>
+                    <p>High-converting commercial AI ads for apparel, accessories, and business brand growth.</p>
+                    <a href="https://www.facebook.com/share/r/1DLTUCkb3W/" target="_blank" class="watch-link">Watch Reel →</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-info">
+                    <div class="work-tag">PRODUCT SHOWCASE</div>
+                    <h3>Watch & Luxury Product Ads</h3>
+                    <p>Cinematic product video ads with 3D elements, dynamic lighting, and precise pacing.</p>
+                    <a href="https://www.facebook.com/share/r/1GHX64EUQS/" target="_blank" class="watch-link">Watch Reel →</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-info">
+                    <div class="work-tag">ISLAMIC CONTENT</div>
+                    <h3>Inspiring Islamic Media</h3>
+                    <p>Aesthetically designed Quranic motion videos and spiritually uplifting AI content.</p>
+                    <a href="https://www.facebook.com/share/r/17JXCadiDQ/" target="_blank" class="watch-link">Watch Reel →</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-info">
+                    <div class="work-tag">BRAND PROMOTION</div>
+                    <h3>Dynamic AI Campaigns</h3>
+                    <p>Custom AI visual sequences optimized for Facebook, Reels, and social media ads.</p>
+                    <a href="https://www.facebook.com/share/r/1Eq1L8SALi/" target="_blank" class="watch-link">Watch Reel →</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Contact & Order Section -->
-    <section class="section" id="contact">
-        <div class="glass-card contact-box">
+    <!-- Production Pipeline Section -->
+    <section class="process-section" id="process">
+        <div class="section-header">
+            <h2>CREATIVE <span>WORKFLOW</span></h2>
+            <p>A structured, high-quality production pipeline tailored for commercial and creative excellence.</p>
+        </div>
+
+        <div class="pipeline-grid">
+            <div class="pipeline-step">
+                <div class="step-num">01</div>
+                <h4>Concept & Scripting</h4>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">02</div>
+                <h4>AI Video Generation</h4>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">03</div>
+                <h4>Editing & Sound Design</h4>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">04</div>
+                <h4>4K Final Polish</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="contact-box">
             <h2>START A <span>PROJECT</span></h2>
-            <p>Ready to transform your vision into an epic AI anime edit?</p>
-
-            <form action="https://api.web3forms.com/submit" method="POST" class="cyber-form">
-                <input type="hidden" name="access_key" value="fb725878-65a7-43b0-8154-ed8a86718f86">
-                <input type="hidden" name="subject" value="New Portfolio Inquiry - Rayhan Sikdar">
-
-                <div class="input-group">
-                    <input type="text" name="Name" placeholder="Your Name" required>
-                    <input type="email" name="Email" placeholder="Your Email" required>
-                </div>
-                <input type="text" name="Project Type" placeholder="Project Type (e.g., Anime Edit, Commercial AI Reel)">
-                <textarea name="Message" rows="4" placeholder="Tell me about your video idea..." required></textarea>
-
-                <button type="submit" class="btn-neon">SEND INQUIRY ⚡</button>
-            </form>
+            <p>Creative Solutions For Your Ideas — Let's build inspiring content and powerful brand ads together.</p>
 
             <div class="social-links">
-                <a href="https://www.facebook.com/rayhansikdarr" target="_blank">Facebook</a>
-                <a href="https://www.instagram.com/ahasanul_haque_rayhan" target="_blank">Instagram</a>
-                <a href="tel:+8809658754629">Call Us</a>
+                <a href="https://www.facebook.com/rayhansikdarr" target="_blank" class="btn btn-primary">Facebook Profile</a>
+                <a href="https://www.instagram.com/ahasanul_haque_rayhan" target="_blank" class="btn btn-secondary">Instagram</a>
+                <a href="tel:+8809658754629" class="btn btn-secondary">Call: +880 9658-754629</a>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
-        <p>© 2026 Rayhan Sikdar. Built with 3D Web Graphics.</p>
+        <p>© 2026 Rayhan Sikdar. Focus • Faith • Create. Built with Interactive 3D Web Graphics.</p>
     </footer>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <!-- Interactive 3D Canvas Background Script -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 65;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 0.5,
+                color: Math.random() > 0.5 ? '#d4af37' : '#00f2fe',
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 
